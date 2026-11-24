@@ -1,0 +1,108 @@
+---
+/**
+ * ThemeToggle.astro
+ *
+ * Lightweight, accessible light/dark theme toggle button.
+ * Uses inline SVGs and synchronizes with localStorage and system preference.
+ */
+import { getLocaleFromUrl, t } from '../lib/i18n/index.js';
+
+interface Props {
+  class?: string;
+  id?: string;
+}
+
+const { class: className = '', id } = Astro.props;
+const locale = getLocaleFromUrl(Astro.url);
+const toggleLabel = t(locale, 'theme.toggle');
+---
+
+<button
+  type="button"
+  id={id}
+  data-theme-toggle
+  class:list={[
+    'relative inline-flex items-center justify-center w-9 h-9 rounded-full border border-border bg-surface text-foreground hover:border-primary hover:text-primary transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+    className,
+  ]}
+  aria-label={toggleLabel}
+  title={toggleLabel}
+>
+  <!-- Sun Icon (shown in dark mode) -->
+  <svg
+    class="theme-icon-sun w-4.5 h-4.5 hidden"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+
+  <!-- Moon Icon (shown in light mode) -->
+  <svg
+    class="theme-icon-moon w-4.5 h-4.5 block"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+</button>
+
+<style>
+  :global([data-theme='dark']) .theme-icon-sun {
+    display: block !important;
+  }
+  :global([data-theme='dark']) .theme-icon-moon {
+    display: none !important;
+  }
+  :global([data-theme='light']) .theme-icon-sun {
+    display: none !important;
+  }
+  :global([data-theme='light']) .theme-icon-moon {
+    display: block !important;
+  }
+</style>
+
+<script>
+  function initThemeToggles() {
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    buttons.forEach((btn) => {
+      // Remove any existing listener before attaching to avoid duplicate calls
+      btn.replaceWith(btn.cloneNode(true));
+    });
+
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        try {
+          localStorage.setItem('nroma-theme', nextTheme);
+        } catch (e) {
+          // localStorage disabled in private browsing
+        }
+      });
+    });
+  }
+
+  // Initialize on load and on Astro view transitions if used
+  initThemeToggles();
+  document.addEventListener('astro:after-swap', initThemeToggles);
+</script>

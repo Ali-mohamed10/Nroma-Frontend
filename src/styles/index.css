@@ -1,0 +1,436 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@font-face {
+  font-family: 'Dimnah';
+  src: url('/fonts/ae_Dimnah.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ============================================================
+   Nroma — Global Design Tokens & CSS Architecture
+   Brand Colors: #000000 (black), #6d40db (purple), #d7ff7b (lime)
+   Fonts: Alexandria (shared), Dimnah (Arabic body), KA Zaha (English display)
+   ============================================================ */
+
+/* ---- Light Theme (default) ---- */
+:root {
+  /* Brand palette */
+  --color-primary: #6d40db;
+  --color-primary-light: #8b6ae0;
+  --color-primary-dark: #5a30c0;
+  --color-accent: #d7ff7b;
+  --color-accent-dark: #b8e04f;
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* Semantic surfaces */
+  --background-color: #ffffff;
+  --foreground-color: #141414;
+  --surface-color: #f5f5f6;
+  --surface-elevated: #ffffff;
+  --border-color: #e5e5e8;
+  --muted-color: #6b7280;
+
+  /* Component-specific */
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --header-border: rgba(0, 0, 0, 0.06);
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --header-shadow: 0 4px 20px -2px var(--shadow-color);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --card-shadow-hover:
+    0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+
+  /* Typography */
+  --font-heading: "Alexandria", sans-serif;
+  --font-body-ar: "Alexandria", sans-serif;
+  --font-body-en: "Alexandria", sans-serif;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Spacing */
+  --section-padding-y: 4rem;
+  --section-padding-y-md: 6rem;
+  --container-padding-x: 1.25rem;
+  --container-padding-x-md: 2rem;
+  --container-max: 80rem;
+}
+
+/* ---- Dark Theme ---- */
+:root[data-theme="dark"] {
+  --background-color: #0a0a0f;
+  --foreground-color: #f0f0f2;
+  --surface-color: #16161d;
+  --surface-elevated: #1e1e28;
+  --border-color: #2a2a35;
+  --muted-color: #9ca3af;
+
+  --header-bg: rgba(10, 10, 15, 0.88);
+  --header-border: rgba(255, 255, 255, 0.06);
+  --shadow-color: rgba(255, 255, 255, 0.08);
+  --header-shadow: 0 4px 20px -2px var(--shadow-color);
+  --card-shadow:
+    0 1px 3px rgba(255, 255, 255, 0.04), 0 1px 2px rgba(255, 255, 255, 0.02);
+  --card-shadow-hover:
+    0 10px 25px rgba(255, 255, 255, 0.08), 0 4px 10px rgba(255, 255, 255, 0.04);
+}
+
+/* ---- Tailwind v4 Theme Integration ---- */
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-brand-black: var(--color-black);
+  --color-brand-white: var(--color-white);
+
+  --color-background: var(--background-color);
+  --color-foreground: var(--foreground-color);
+  --color-surface: var(--surface-color);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border-color);
+  --color-muted: var(--muted-color);
+
+  --color-header-bg: var(--header-bg);
+  --color-header-border: var(--header-border);
+
+  --color-shadow-color: var(--shadow-color);
+  --color-theme-shadow: var(--shadow-color);
+
+  --shadow-header: var(--header-shadow);
+  --shadow-card: var(--card-shadow);
+  --shadow-card-hover: var(--card-shadow-hover);
+
+  --font-family-heading: var(--font-heading);
+  --font-dimnah: "Dimnah", var(--font-body-ar);
+  --font-family-dimnah: "Dimnah", var(--font-body-ar);
+  --font-family-body: var(--font-body-en);
+
+  --animate-float-slow: float-slow 7s ease-in-out infinite;
+
+  @keyframes float-slow {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg) translateZ(0);
+    }
+    50% {
+      transform: translateY(-18px) rotate(4deg) translateZ(0);
+    }
+  }
+}
+
+/* ---- Base Reset & Defaults ---- */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--surface-color);
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  :root[data-theme="dark"] html {
+    scrollbar-color: var(--color-primary) #14141a;
+  }
+
+  /* Custom Scrollbar inspired by modern agency standards (The Onle style) */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f3;
+  }
+
+  :root[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #14141a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: background var(--transition-fast);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: var(--background-color);
+    color: var(--foreground-color);
+    font-family: var(--font-body-en);
+    line-height: 1.6;
+    transition:
+      background-color var(--transition-base),
+      color var(--transition-base);
+  }
+
+  /* Arabic body font override */
+  [dir="rtl"] body {
+    font-family: var(--font-body-ar);
+  }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  /* Headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    line-height: 1.2;
+    color: var(--foreground-color);
+  }
+
+  /* Images */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Links */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Skip to content */
+  .skip-to-content {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    z-index: 9999;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 600;
+    text-decoration: none;
+    transition: top var(--transition-fast);
+  }
+
+  .skip-to-content:focus {
+    top: 0;
+  }
+}
+
+/* ---- Reusable Component Classes ---- */
+@layer components {
+  /* Layout */
+  .container-site {
+    @apply mx-auto w-full px-5 md:px-8;
+    max-width: var(--container-max);
+  }
+
+  .section-space {
+    padding-block: var(--section-padding-y);
+  }
+
+  @media (min-width: 768px) {
+    .section-space {
+      padding-block: var(--section-padding-y-md);
+    }
+  }
+
+  /* Typography */
+  .heading-1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .heading-2 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .heading-3 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .text-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--muted-color);
+  }
+
+  .text-body-lg {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--muted-color);
+  }
+
+  /* Buttons */
+  .button-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .button-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(109, 64, 219, 0.3);
+  }
+
+  .button-primary:active {
+    transform: translateY(0);
+  }
+
+  .button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background-color: transparent;
+    color: var(--foreground-color);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 9999px;
+    cursor: pointer;
+    transition:
+      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      transform var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .button-secondary:hover {
+    border-color: var(--color-primary);
+    background-color: var(--surface-color);
+    transform: translateY(-1px);
+  }
+
+  /* Cards */
+  .surface-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    box-shadow: var(--card-shadow);
+    transition:
+      box-shadow var(--transition-base),
+      transform var(--transition-base),
+      translate var(--transition-base),
+      border-color var(--transition-base),
+      background-color var(--transition-base);
+  }
+
+  .surface-card:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  /* Entrance animations */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity var(--transition-slow),
+      transform var(--transition-slow);
+  }
+
+  .fade-in-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Dimnah Arabic Display Font */
+.font-dimnah {
+  font-family: 'Dimnah', var(--font-body-ar);
+}
+
+/* Logo theme switching */
+:root[data-theme="dark"] .logo-light,
+[data-theme="dark"] .logo-light {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .logo-dark,
+[data-theme="dark"] .logo-dark {
+  display: block !important;
+}
+
+:root[data-theme="light"] .logo-light,
+[data-theme="light"] .logo-light {
+  display: block !important;
+}
+
+:root[data-theme="light"] .logo-dark,
+[data-theme="light"] .logo-dark {
+  display: none !important;
+}

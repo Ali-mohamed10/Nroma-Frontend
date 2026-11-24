@@ -1,0 +1,56 @@
+---
+/**
+ * LanguageSwitcher.astro
+ *
+ * Switches between Arabic and English while strictly preserving the equivalent route.
+ * Reuses centralized i18n utilities and respects trailing slashes.
+ */
+import { getLocaleFromUrl, getAlternatePath, t } from '../lib/i18n/index.js';
+
+interface Props {
+  class?: string;
+  variant?: 'compact' | 'full';
+}
+
+const { class: className = '', variant = 'compact' } = Astro.props;
+
+const currentLocale = getLocaleFromUrl(Astro.url);
+const alternate = getAlternatePath(Astro.url.pathname);
+const targetLocaleName = alternate.locale === 'ar' ? 'العربية' : 'English';
+const targetLocaleShort = alternate.locale === 'ar' ? 'عربي' : 'EN';
+const ariaLabel = t(currentLocale, 'lang.switch');
+---
+
+<a
+  href={alternate.path}
+  hreflang={alternate.locale}
+  lang={alternate.locale}
+  class:list={[
+    'inline-flex items-center justify-center font-medium transition-all duration-200 border rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary select-none',
+    variant === 'compact'
+      ? 'h-9 px-3 text-xs border border-border bg-surface text-foreground hover:border-primary hover:text-primary'
+      : 'w-full py-2.5 px-4 text-sm border border-border bg-surface text-foreground hover:border-primary hover:text-primary',
+    className,
+  ]}
+  aria-label={ariaLabel}
+  title={targetLocaleName}
+>
+  <span class="flex items-center gap-1.5">
+    <!-- Globe Icon -->
+    <svg
+      class="w-3.5 h-3.5 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+      <path d="M2 12h20"></path>
+    </svg>
+    <span>{variant === 'compact' ? targetLocaleShort : targetLocaleName}</span>
+  </span>
+</a>

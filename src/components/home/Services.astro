@@ -1,0 +1,523 @@
+---
+/**
+ * Services.astro
+ *
+ * Premium Nroma Agency Services Section featuring the 3D Transparent Tennis Ball Container.
+ * Showcases the agency's 6 core capabilities with an editorial 2-column layout on desktop
+ * and an intuitive, fluid single-column hierarchy on mobile.
+ *
+ * Integrated with the continuous scroll-driven tennis ball journey:
+ * The ball travels from Hero -> through AgencyIntro -> and drops into this container,
+ * joining the two existing balls to complete the official 3-ball tube!
+ */
+import Container from '../ui/Container.astro';
+import { getLocaleFromUrl, localePath, t } from '../../lib/i18n/index.js';
+
+const locale = getLocaleFromUrl(Astro.url);
+
+const services = [
+  {
+    number: '01',
+    title: t(locale, 'home.services.s1.title'),
+    desc: t(locale, 'home.services.s1.desc'),
+  },
+  {
+    number: '02',
+    title: t(locale, 'home.services.s2.title'),
+    desc: t(locale, 'home.services.s2.desc'),
+  },
+  {
+    number: '03',
+    title: t(locale, 'home.services.s3.title'),
+    desc: t(locale, 'home.services.s3.desc'),
+  },
+  {
+    number: '04',
+    title: t(locale, 'home.services.s4.title'),
+    desc: t(locale, 'home.services.s4.desc'),
+  },
+  {
+    number: '05',
+    title: t(locale, 'home.services.s5.title'),
+    desc: t(locale, 'home.services.s5.desc'),
+  },
+  {
+    number: '06',
+    title: t(locale, 'home.services.s6.title'),
+    desc: t(locale, 'home.services.s6.desc'),
+  },
+];
+---
+
+<section
+  id="home-services"
+  class="relative py-24 sm:py-32 bg-surface md:bg-surface/80 text-foreground overflow-hidden"
+  aria-labelledby="services-heading"
+>
+  <!-- Decorative Ambient Glow — lighter blur, permanent GPU layer, strict containment -->
+  <div
+    class="services-glow pointer-events-none absolute -top-40 start-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full transform-gpu -z-10"
+    aria-hidden="true"
+  ></div>
+
+  <Container>
+    <div class="flex flex-col md:flex-row items-start justify-between gap-10 md:gap-12 lg:gap-16">
+      
+      <!-- Content Column (Headline, Description, Mobile Tube, Service Cards Reel, CTA) -->
+      <div class="flex-1 min-w-0 w-full flex flex-col justify-center">
+        
+        <!-- Category Eyebrow Badge -->
+        <div class="flex items-center gap-4 mb-4 sm:mb-6">
+          <span class="w-8 sm:w-12 h-[2px] bg-primary" aria-hidden="true"></span>
+          <span class="text-xs sm:text-sm font-semibold tracking-wider text-primary">
+            {t(locale, 'home.services.badge')}
+          </span>
+        </div>
+
+        <!-- Section Title (Client Approved Headline - Harmonized with AgencyIntro) -->
+        <h2
+          id="services-heading"
+          class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-[1.5] max-w-2xl mb-6"
+        >
+          {t(locale, 'home.services.headline')}
+        </h2>
+
+        <!-- Supporting Statement / Description (Harmonized with AgencyIntro) -->
+        <p class="text-sm md:text-base text-muted max-w-2xl leading-relaxed mb-8">
+          {t(locale, 'home.services.description')}
+        </p>
+
+        <!-- Mobile-Only Tube Visual (Placed between headline and cards for mobile flow, hidden on md+) -->
+        <div class="md:hidden flex flex-col items-center justify-center my-6 py-4">
+          <div
+            class="relative w-full max-w-[240px] sm:max-w-[280px] flex flex-col items-center justify-center"
+            data-tube-target
+          >
+            <!-- Ambient Glow behind mobile tube — lightweight -->
+            <div
+              class="services-tube-glow pointer-events-none absolute w-52 h-64 rounded-full transform-gpu -z-10"
+              aria-hidden="true"
+            ></div>
+
+            <!-- Base Tube Image (z-10) -->
+            <img
+              src="/images/Neon_Nroma_Tennis_Ball_Tube.webp"
+              alt={t(locale, 'home.services.tubeAlt')}
+              width="408"
+              height="612"
+              class="w-full h-auto object-contain select-none relative z-10"
+              loading="eager"
+              decoding="async"
+            />
+
+            <!-- Front Glass Overlay (z-45) -->
+            <img
+              src="/images/Neon_Nroma_Tennis_Ball_Tube_front.webp"
+              alt=""
+              width="408"
+              height="612"
+              class="pointer-events-none select-none absolute inset-0 w-full h-full object-contain"
+              style="z-index: 45;"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+
+        <!-- 6 Core Services Cards Container (Horizontal Reel on ALL screens) -->
+        <div
+          id="services-cards-track"
+          class="services-track flex gap-4 sm:gap-5 pb-4 pt-1 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 mb-4"
+        >
+          {services.map((service) => (
+            <article class="services-card group relative p-6 sm:p-7 rounded-2xl border border-border/70 flex flex-col justify-between flex-shrink-0 w-[84%] sm:w-[68%] md:w-[280px] lg:w-[310px] xl:w-[330px] snap-start">
+              <div>
+                <!-- Top Card Bar: Number Accent -->
+                <div class="mb-4">
+                  <span class="text-xs sm:text-sm font-mono font-bold tracking-widest text-primary/80 group-hover:text-primary md:transition-colors md:duration-200">
+                    {service.number}
+                  </span>
+                </div>
+
+                <!-- Service Title (H3 - Harmonized) -->
+                <h3 class="text-base sm:text-lg font-bold text-foreground mb-2 group-hover:text-primary md:transition-colors md:duration-200">
+                  {service.title}
+                </h3>
+
+                <!-- Service Description -->
+                <p class="text-sm text-muted leading-relaxed">
+                  {service.desc}
+                </p>
+              </div>
+
+              <!-- Link to Case Study Request -->
+              <a
+                href={`${localePath(locale, 'request-case-study')}?project=${(service as any).projectSlug || 'creative-campaigns'}`}
+                class="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs text-muted/80 group-hover:text-primary md:transition-colors md:duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm"
+                aria-label={`${service.title} — ${t(locale, 'cta.caseStudy')}`}
+              >
+                <span class="font-medium">Nroma Ecosystem</span>
+                <svg
+                  class="w-3.5 h-3.5 rtl:rotate-180 md:transition-transform md:duration-200 group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <!-- Touch-Swipe Gesture Hint & Carousel Controls (Active on ALL screens) -->
+        <div class="flex items-center justify-between gap-3 px-1 mb-8 text-xs text-muted/75">
+          <div class="inline-flex items-center gap-2">
+            <svg
+              class="services-swipe-hint w-4 h-4 text-primary rtl:rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+            <span class="font-medium">{t(locale, 'home.services.swipeHint')}</span>
+          </div>
+
+          <!-- Controls: Counter & Desktop Prev/Next Buttons -->
+          <div class="flex items-center gap-3">
+            <span id="services-counter" class="font-mono text-[11px] text-primary/80 font-bold tracking-wider">01 — 06</span>
+            <div class="hidden sm:inline-flex items-center gap-1.5">
+              <button
+                id="services-carousel-prev"
+                type="button"
+                class="w-8 h-8 rounded-full border border-border/70 bg-surface/50 hover:bg-surface hover:border-primary/50 flex items-center justify-center transition-colors duration-150 text-foreground focus-visible:outline-2 focus-visible:outline-primary cursor-pointer active:scale-95"
+                aria-label="Previous service"
+              >
+                <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                id="services-carousel-next"
+                type="button"
+                class="w-8 h-8 rounded-full border border-border/70 bg-surface/50 hover:bg-surface hover:border-primary/50 flex items-center justify-center transition-colors duration-150 text-foreground focus-visible:outline-2 focus-visible:outline-primary cursor-pointer active:scale-95"
+                aria-label="Next service"
+              >
+                <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section CTA Link -->
+        <div class="flex items-center gap-4">
+          <a
+            href={localePath(locale, 'work')}
+            class="button-primary group inline-flex items-center gap-3"
+          >
+            <span>{t(locale, 'home.services.cta')}</span>
+            <svg
+              class="w-4 h-4 rtl:rotate-180 transition-transform duration-200 group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Desktop-Only Visual Column (Sticky Showcase Tube) -->
+      <div class="hidden md:flex flex-shrink-0 w-full md:w-[280px] lg:w-[320px] xl:w-[380px] sticky top-36 flex-col items-center justify-center services-sticky-tube">
+        <!-- Ambient Glow Aura behind Desktop Tube — lightweight -->
+        <div
+          class="services-tube-glow pointer-events-none absolute w-72 h-96 rounded-full transform-gpu -z-10"
+          aria-hidden="true"
+        ></div>
+
+        <!-- 3D Cylinder Tube Container Target -->
+        <div
+          class="relative w-full max-w-[260px] lg:max-w-[300px] xl:max-w-[360px] flex flex-col items-center justify-center"
+          data-tube-target
+        >
+          <!-- Base Tube Asset (z-10) -->
+          <img
+            src="/images/Neon_Nroma_Tennis_Ball_Tube.webp"
+            alt={t(locale, 'home.services.tubeAlt')}
+            width="408"
+            height="612"
+            class="w-full h-auto object-contain select-none relative z-10"
+            loading="eager"
+            decoding="async"
+          />
+
+          <!-- Front Glass Overlay (z-45, sits in front of the incoming ball z-40) -->
+          <img
+            src="/images/Neon_Nroma_Tennis_Ball_Tube_front.webp"
+            alt=""
+            width="408"
+            height="612"
+            class="pointer-events-none select-none absolute inset-0 w-full h-full object-contain"
+            style="z-index: 45;"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+
+    </div>
+  </Container>
+</section>
+
+<style>
+  /*
+   * ============================================================
+   * Services Section — Performance-Critical CSS
+   *
+   * Mobile-first perf strategy:
+   * 1. Blur decorations HIDDEN on mobile (< 768px) — saves massive GPU texture cost
+   * 2. Cards use NO transitions on touch (hover doesn't exist on touch)
+   * 3. Solid background on mobile (no expensive alpha compositing)
+   * 4. Desktop: explicit property transitions, GPU containment
+   * ============================================================
+   */
+
+  /* ── Decorative ambient glow (top) — hidden on mobile, light on desktop ── */
+  .services-glow {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .services-glow {
+      display: block;
+      background: rgba(109, 64, 219, 0.08);
+      filter: blur(80px);
+      contain: strict;
+    }
+  }
+
+  /* ── Tube ambient glows — hidden on mobile, visible on desktop ── */
+  .services-tube-glow {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .services-tube-glow {
+      display: block;
+      background: rgba(109, 64, 219, 0.15);
+      filter: blur(40px);
+      contain: strict;
+    }
+  }
+
+  /* ── Sticky tube ── */
+  .services-sticky-tube {
+    z-index: 10;
+  }
+
+  /* ── Scroll track — optimal momentum + no scrollbar ── */
+  .services-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .services-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Service cards — base (mobile-first: NO transitions, just static styles) ── */
+  .services-card {
+    background-color: var(--surface-color);
+    box-shadow: var(--card-shadow);
+  }
+
+  /* ── Desktop: enable hover transitions (pointer devices only) ── */
+  @media (hover: hover) and (pointer: fine) {
+    .services-card {
+      contain: layout style;
+      transition:
+        border-color 200ms ease-out,
+        box-shadow 200ms ease-out,
+        translate 200ms ease-out;
+    }
+
+    .services-card:hover {
+      border-color: rgba(109, 64, 219, 0.5);
+      box-shadow: var(--card-shadow-hover);
+      translate: 0 -6px;
+    }
+  }
+
+  /* ── Swipe hint pulse animation — only active when visible ── */
+  .services-swipe-hint {
+    opacity: 1;
+  }
+
+  .services-swipe-hint.is-animating {
+    animation: swipe-pulse 2s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  @keyframes swipe-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── Respect reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .services-card {
+      transition: none !important;
+    }
+
+    .services-swipe-hint.is-animating {
+      animation: none;
+    }
+  }
+</style>
+
+
+<script>
+  let cleanupServicesCarousel: (() => void) | null = null;
+
+  function initServicesCarousel() {
+    if (cleanupServicesCarousel) {
+      cleanupServicesCarousel();
+      cleanupServicesCarousel = null;
+    }
+
+    const track = document.getElementById('services-cards-track');
+    const prevBtn = document.getElementById('services-carousel-prev');
+    const nextBtn = document.getElementById('services-carousel-next');
+    const counter = document.getElementById('services-counter');
+    if (!track) return;
+
+    const cards = track.querySelectorAll('article');
+    const totalCards = cards.length;
+    if (totalCards === 0) return;
+
+    // Detect RTL mode safely
+    const isRTL = () =>
+      document.documentElement.dir === 'rtl' ||
+      getComputedStyle(track).direction === 'rtl';
+
+    // Fast cached step distance (card width + flex gap)
+    let cardStep = 320;
+    function updateStep() {
+      const firstCard = cards[0];
+      if (firstCard) {
+        cardStep = firstCard.offsetWidth + 20; // width + gap
+      }
+    }
+    updateStep();
+
+    const onNext = () => {
+      const delta = isRTL() ? -cardStep : cardStep;
+      track.scrollBy({ left: delta, behavior: 'smooth' });
+    };
+
+    const onPrev = () => {
+      const delta = isRTL() ? cardStep : -cardStep;
+      track.scrollBy({ left: delta, behavior: 'smooth' });
+    };
+
+    if (nextBtn) nextBtn.addEventListener('click', onNext);
+    if (prevBtn) prevBtn.addEventListener('click', onPrev);
+
+    // High-performance counter update on scroll (rAF-throttled, zero layout thrashing)
+    let ticking = false;
+    let lastIndex = 0;
+    const totalNum = String(totalCards).padStart(2, '0');
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollPos = Math.abs(track.scrollLeft);
+          const index = Math.min(totalCards - 1, Math.max(0, Math.round(scrollPos / cardStep)));
+          if (index !== lastIndex) {
+            lastIndex = index;
+            if (counter) {
+              counter.textContent = `${String(index + 1).padStart(2, '0')} — ${totalNum}`;
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    track.addEventListener('scroll', onScroll, { passive: true });
+
+    // Debounced resize handler
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    const onResize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateStep, 150);
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+
+    // Swipe hint animation — only animate when section is visible (saves GPU frames when offscreen)
+    const swipeHint = document.querySelector('.services-swipe-hint');
+    let swipeObserver: IntersectionObserver | null = null;
+
+    if (swipeHint && typeof IntersectionObserver !== 'undefined') {
+      swipeObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              swipeHint.classList.add('is-animating');
+            } else {
+              swipeHint.classList.remove('is-animating');
+            }
+          }
+        },
+        { threshold: 0 }
+      );
+      swipeObserver.observe(swipeHint);
+    }
+
+    cleanupServicesCarousel = () => {
+      if (nextBtn) nextBtn.removeEventListener('click', onNext);
+      if (prevBtn) prevBtn.removeEventListener('click', onPrev);
+      track.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      if (swipeObserver) {
+        swipeObserver.disconnect();
+        swipeObserver = null;
+      }
+      if (swipeHint) swipeHint.classList.remove('is-animating');
+    };
+  }
+
+  // Initialize immediately and on view transitions with full teardown
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initServicesCarousel, { once: true });
+  } else {
+    initServicesCarousel();
+  }
+  document.addEventListener('astro:page-load', initServicesCarousel);
+  document.addEventListener('astro:before-swap', () => {
+    if (cleanupServicesCarousel) {
+      cleanupServicesCarousel();
+      cleanupServicesCarousel = null;
+    }
+  });
+</script>

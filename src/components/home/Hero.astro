@@ -1,0 +1,459 @@
+---
+/**
+ * Hero.astro
+ *
+ * Cinematic Fullscreen Slideshow Hero for Nroma Agency.
+ * Implements hardware-accelerated parallax transitions, scale reveals, staggered captions,
+ * floating 3D brand elements, and responsive touch/keyboard navigation.
+ * Fully optimized for SEO (single H1, localized alt, semantic landmarks)
+ * and 60/120fps GPU performance (zero layout shifts, reduced composite layers, memory-safe JS).
+ */
+import Container from '../ui/Container.astro';
+import { getLocaleFromUrl, localePath, t } from '../../lib/i18n/index.js';
+
+const locale = getLocaleFromUrl(Astro.url);
+const isRtl = locale === 'ar';
+
+const slides = [
+  {
+    id: 1,
+    image: '/images/hero/photo-1618005182384-a83a8bd57fbe.webp',
+    eyebrow: t(locale, 'hero.slide1.eyebrow'),
+    title: t(locale, 'hero.slide1.title'),
+    ctaText: t(locale, 'hero.slide1.cta'),
+    ctaHref: localePath(locale, 'about'),
+    floatingAsset: '/images/hero/brand-icon-7.webp',
+    assetAlt: isRtl
+      ? 'كرة التنس الإبداعية ثلاثية الأبعاد المخصصة لوكالة نروما'
+      : 'Nroma 3D Creative Tennis Ball Element',
+  },
+  {
+    id: 2,
+    image: '/images/hero/photo-1634017839464-5c339ebe3cb4.webp',
+    eyebrow: t(locale, 'hero.slide2.eyebrow'),
+    title: t(locale, 'hero.slide2.title'),
+    ctaText: t(locale, 'hero.slide2.cta'),
+    ctaHref: localePath(locale, 'work'),
+    floatingAsset: '/images/hero/brand-icon-7.webp',
+    assetAlt: isRtl
+      ? 'شعار وعنصر هوية نروما البصري ثلاثي الأبعاد'
+      : 'Nroma 3D Metallic Branding Element',
+  },
+  {
+    id: 3,
+    image: '/images/hero/photo-1618005198919-d3d4b5a92ead.webp',
+    eyebrow: t(locale, 'hero.slide3.eyebrow'),
+    title: t(locale, 'hero.slide3.title'),
+    ctaText: t(locale, 'hero.slide3.cta'),
+    ctaHref: localePath(locale, 'contact'),
+    floatingAsset: '/images/hero/brand-icon-7.webp',
+    assetAlt: isRtl
+      ? 'التصميم الإبداعي ثلاثي الأبعاد لحملات نروما التسويقية'
+      : 'Nroma Creative Campaign 3D Asset',
+  },
+];
+---
+
+<section
+  class="slideshow relative w-full min-h-screen min-h-[100svh] md:h-screen md:min-h-[640px] md:max-h-[960px] overflow-hidden select-none bg-[#0a0a0f] text-white flex items-center contain-paint"
+  id="js-header"
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={isRtl ? 'القسم الرئيسي - معرض الأفكار والأعمال' : 'Hero Showcase Carousel'}
+>
+  <!-- Background Pattern Watermark from docs/Design Referance/Backround/1.png -->
+  <div
+    class="pointer-events-none absolute inset-0 z-10 bg-repeat opacity-[0.04] mix-blend-overlay bg-[url('/images/hero/bg-pattern.webp')] bg-[length:380px_510px] transform-gpu"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Subtle brand purple aura in top corner (Static GPU Layer outside slides to eliminate recalculation) -->
+  <div
+    class="pointer-events-none absolute top-0 end-0 z-10 w-[55vw] h-[55vw] max-w-[600px] max-h-[600px] bg-[#6d40db]/20 rounded-full blur-[120px] transform-gpu"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Slides -->
+  {slides.map((slide, index) => (
+    <div
+      class:list={[
+        'slideshow__slide js-slider-home-slide group/slide absolute inset-0 w-full h-full invisible pointer-events-none transition-[visibility] duration-0 delay-[1200ms] [&.is-current]:visible [&.is-current]:pointer-events-auto [&.is-current]:delay-0 [&.is-current]:z-10',
+        index === 0 ? 'is-current' : 'is-next',
+      ]}
+      data-slide={slide.id}
+      role="group"
+      aria-roledescription="slide"
+      aria-label={`${index + 1} / ${slides.length}`}
+      aria-hidden={index === 0 ? 'false' : 'true'}
+    >
+      <!-- Parallax Background Layer (Hardware-accelerated 2-tier composition) -->
+      <div class="slideshow__slide-background-wrap absolute inset-0 w-full h-full overflow-hidden transform-gpu transition-transform duration-[1200ms] ease-[cubic-bezier(0.4,0,0.2,1)] translate-y-0 group-[.is-prev]/slide:-translate-y-full group-[.is-next]/slide:translate-y-full">
+        <div
+          class="slideshow__slide-image absolute inset-0 w-full h-full bg-cover bg-center transform-gpu transition-transform duration-[1400ms] ease-[cubic-bezier(0.4,0,0.2,1)] scale-100 group-[.is-prev]/slide:scale-[1.2] group-[.is-prev]/slide:translate-y-[25%] group-[.is-next]/slide:scale-[1.2] group-[.is-next]/slide:-translate-y-[25%]"
+          style={`background-image: url('${slide.image}');`}
+        >
+          <!-- Ambient Contrast Overlays -->
+          <div class="absolute inset-0 bg-[#0a0a0f]/65"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-[#0a0a0f]/80 via-transparent to-[#0a0a0f]/40 rtl:bg-gradient-to-l"></div>
+        </div>
+      </div>
+
+      <!-- Slide Caption & 3D Brand Element Flex Container -->
+      <div class="slideshow__slide-caption relative z-20 h-full w-full pt-44 md:py-48 pb-4">
+        <Container class="w-full my-auto flex flex-col justify-center">
+          
+          <!-- Row 1: Info (Text) & 3D Image -->
+          <div class="flex flex-col sm:flex-row items-center gap-8 justify-between w-full">
+            
+            <!-- Info (Text Block) -->
+            <div class="slideshow__slide-caption-text flex-1 max-w-2xl transition-[transform,translate,opacity] duration-[1000ms] delay-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)] translate-y-0 opacity-100 group-[.is-prev]/slide:-translate-y-[50px] group-[.is-prev]/slide:opacity-0 group-[.is-prev]/slide:delay-0 group-[.is-next]/slide:translate-y-[50px] group-[.is-next]/slide:opacity-0 group-[.is-next]/slide:delay-0">
+              <!-- Eyebrow Category -->
+              <div class="hero-eyebrow inline-flex items-center gap-2 sm:gap-3 mb-3 md:mb-5">
+                <span class="w-6 sm:w-12 h-[2px] bg-accent" aria-hidden="true"></span>
+                <span class="text-xs sm:text-sm font-semibold tracking-wider uppercase text-accent">
+                  {slide.eyebrow}
+                </span>
+              </div>
+
+              <!-- Big Bold Headline (Semantic Single H1 on First Slide, H2 on others for SEO) -->
+              {index === 0 ? (
+                <h1 class="slideshow__slide-caption-title text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.7] mb-2 sm:mb-3 md:mb-6">
+                  {slide.title}
+                </h1>
+              ) : (
+                <h2 class="slideshow__slide-caption-title text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-[1.7] mb-2 sm:mb-3 md:mb-6">
+                  {slide.title}
+                </h2>
+              )}
+
+              <!-- Interactive Subtitle Link -->
+              <div class="slideshow__slide-caption-subtitle">
+                <a
+                  href={slide.ctaHref}
+                  class="o-hsub -link group inline-flex items-center gap-4 text-sm sm:text-base font-semibold text-white/90 hover:text-white transition-colors duration-200"
+                >
+                  <span class="o-hsub_line relative inline-block w-8 sm:w-12 h-[2px] bg-white transition-all duration-300 group-hover:w-16 group-hover:bg-accent" aria-hidden="true"></span>
+                  <span class="o-hsub_label transition-transform duration-300 group-hover:translate-x-2 rtl:group-hover:-translate-x-2 group-hover:text-accent">
+                    {slide.ctaText}
+                  </span>
+                  <!-- Arrow Icon -->
+                  <svg
+                    class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5 rtl:group-hover:-translate-x-1.5 rtl:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- 3D Brand Element (Tennis Ball) in Flex Container -->
+            <div
+              class="floating-brand-asset pointer-events-none select-none flex-shrink-0 w-[clamp(120px,18vw,170px)] md:w-[clamp(200px,20vw,480px)] lg:w-[clamp(260px,22vw,500px)] 2xl:w-[clamp(250px,18vw,500px)] max-h-[25vh] sm:max-h-[34vh] md:max-h-none flex justify-center items-center transition-[transform,translate,opacity] duration-[1000ms] delay-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)] translate-y-0 opacity-100 group-[.is-prev]/slide:translate-y-[40px] group-[.is-prev]/slide:opacity-0 group-[.is-prev]/slide:delay-0 group-[.is-next]/slide:-translate-y-[40px] group-[.is-next]/slide:opacity-0 group-[.is-next]/slide:delay-0"
+              aria-hidden="true"
+            >
+              <img
+                src={slide.floatingAsset}
+                alt={slide.assetAlt}
+                width="500"
+                height="500"
+                class="w-full h-auto object-contain animate-float-slow transform-gpu"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding={index === 0 ? 'sync' : 'async'}
+                fetchpriority={index === 0 ? 'high' : 'auto'}
+              />
+            </div>
+
+          </div>
+
+          <!-- Row 2: Bottom Navigation & Controls (Directly Under Info & Image) -->
+          <div class="c-header-home_footer mt-4 md:mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+            <!-- Prev / Next Buttons -->
+            <div class="c-header-home_controls flex items-center gap-2">
+              <button
+                type="button"
+                class="js-slider-home-prev group relative inline-flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 rounded-full sm:rounded-2xl border border-white/20 bg-white/5 hover:bg-white text-white hover:text-black backdrop-blur-md transition-[background-color,color,border-color] duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-95"
+                aria-label={isRtl ? 'الشريحة السابقة' : 'Previous slide'}
+              >
+                <svg
+                  class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180 transition-transform duration-300 group-hover:-translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m15 18-6-6 6-6"></path>
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                class="js-slider-home-next group relative inline-flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 rounded-full sm:rounded-2xl border border-white/20 bg-white/5 hover:bg-white text-white hover:text-black backdrop-blur-md transition-[background-color,color,border-color] duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-95"
+                aria-label={isRtl ? 'الشريحة التالية' : 'Next slide'}
+              >
+                <svg
+                  class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m9 18 6-6-6-6"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Numbered Pagination Items -->
+            <div class="pagination flex items-center gap-1.5 sm:gap-3">
+              {slides.map((s, i) => (
+                <button
+                  type="button"
+                  class:list={[
+                    'js-pagination-item group/item relative flex items-center gap-1.5 sm:gap-2 py-1.5 px-2 sm:py-2 sm:px-3 text-xs font-bold tracking-widest cursor-pointer transition-all duration-300 rounded-lg',
+                    i === index
+                      ? 'is-current text-accent'
+                      : 'text-white/50 hover:text-white',
+                  ]}
+                  data-slide={s.id}
+                  aria-label={`${isRtl ? 'الانتقال للشريحة' : 'Go to slide'} ${s.id}`}
+                >
+                  <span class="pagination__number">0{s.id}</span>
+                  <span class="pagination__bar inline-block h-[2px] w-0 group-[.is-current]/item:w-5 sm:group-[.is-current]/item:w-7 bg-accent transition-all duration-300 rounded-full" aria-hidden="true"></span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+        </Container>
+      </div>
+    </div>
+  ))}
+</section>
+
+<script>
+  /**
+   * Vanilla JS Slideshow Controller
+   * Handles autoplay, next/prev transitions, click debouncing, swipe gestures,
+   * accessibility state updates, and tab-visibility pause/resume with zero memory leaks.
+   */
+  let cleanupHeroSlideshow: (() => void) | null = null;
+
+  function initHeroSlideshow() {
+    // Teardown previous instances on client navigation
+    if (cleanupHeroSlideshow) {
+      cleanupHeroSlideshow();
+      cleanupHeroSlideshow = null;
+    }
+
+    const slideshow = document.getElementById('js-header');
+    if (!slideshow) return;
+
+    const slides = Array.from(slideshow.querySelectorAll('.js-slider-home-slide'));
+    const paginationItems = Array.from(slideshow.querySelectorAll('.js-pagination-item'));
+    const prevBtns = Array.from(slideshow.querySelectorAll('.js-slider-home-prev'));
+    const nextBtns = Array.from(slideshow.querySelectorAll('.js-slider-home-next'));
+
+    if (slides.length <= 1) return;
+
+    let currentIndex = 0;
+    let isAnimating = false;
+    const animationDuration = 1200;
+    const autoplaySpeed = 6000;
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+
+    // Respect Reduced Motion Preferences
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function goToSlide(targetIndex: number) {
+      if (isAnimating || targetIndex === currentIndex) return;
+      isAnimating = true;
+
+      // Wrap around bounds
+      if (targetIndex >= slides.length) targetIndex = 0;
+      if (targetIndex < 0) targetIndex = slides.length - 1;
+
+      const isAdvancing = targetIndex > currentIndex || (currentIndex === slides.length - 1 && targetIndex === 0);
+
+      slides.forEach((slide, i) => {
+        slide.classList.remove('is-current', 'is-prev', 'is-next');
+        if (i === targetIndex) {
+          slide.classList.add('is-current');
+          slide.setAttribute('aria-hidden', 'false');
+        } else if (i === currentIndex) {
+          slide.classList.add(isAdvancing ? 'is-prev' : 'is-next');
+          slide.setAttribute('aria-hidden', 'true');
+        } else {
+          slide.classList.add(i > targetIndex ? 'is-next' : 'is-prev');
+          slide.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      // Update Pagination Indicators
+      paginationItems.forEach((item) => {
+        const slideId = parseInt(item.getAttribute('data-slide') || '1', 10);
+        if (slideId === targetIndex + 1) {
+          item.classList.add('is-current', 'text-accent');
+          item.classList.remove('text-white/50');
+        } else {
+          item.classList.remove('is-current', 'text-accent');
+          item.classList.add('text-white/50');
+        }
+      });
+
+      currentIndex = targetIndex;
+
+      setTimeout(() => {
+        isAnimating = false;
+      }, animationDuration);
+    }
+
+    function nextSlide() {
+      goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentIndex - 1);
+    }
+
+    // Button Click Handlers
+    const onNextClick = (e: Event) => {
+      e.preventDefault();
+      resetAutoplay();
+      nextSlide();
+    };
+
+    const onPrevClick = (e: Event) => {
+      e.preventDefault();
+      resetAutoplay();
+      prevSlide();
+    };
+
+    nextBtns.forEach((btn) => btn.addEventListener('click', onNextClick));
+    prevBtns.forEach((btn) => btn.addEventListener('click', onPrevClick));
+
+    // Pagination Click Handlers
+    const onPaginationClick = (e: Event) => {
+      const target = (e.currentTarget as HTMLElement);
+      const slideId = parseInt(target.getAttribute('data-slide') || '1', 10);
+      resetAutoplay();
+      goToSlide(slideId - 1);
+    };
+
+    paginationItems.forEach((item) => item.addEventListener('click', onPaginationClick));
+
+    // Keyboard Arrow Navigation
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        resetAutoplay();
+        document.documentElement.dir === 'rtl' ? prevSlide() : nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        resetAutoplay();
+        document.documentElement.dir === 'rtl' ? nextSlide() : prevSlide();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+
+    // Touch Gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 50) {
+        resetAutoplay();
+        const isRTL = document.documentElement.dir === 'rtl';
+        if (diff < 0) {
+          isRTL ? prevSlide() : nextSlide();
+        } else {
+          isRTL ? nextSlide() : prevSlide();
+        }
+      }
+    };
+
+    slideshow.addEventListener('touchstart', onTouchStart, { passive: true });
+    slideshow.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    // Autoplay Management
+    function startAutoplay() {
+      if (prefersReducedMotion) return;
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        if (!isAnimating && !document.hidden) {
+          nextSlide();
+        }
+      }, autoplaySpeed);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    function resetAutoplay() {
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    // Hover Pause/Resume
+    slideshow.addEventListener('mouseenter', stopAutoplay);
+    slideshow.addEventListener('mouseleave', startAutoplay);
+
+    // Tab Visibility Handler
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    // Initial launch
+    startAutoplay();
+
+    // Register cleanup callback
+    cleanupHeroSlideshow = () => {
+      stopAutoplay();
+      nextBtns.forEach((btn) => btn.removeEventListener('click', onNextClick));
+      prevBtns.forEach((btn) => btn.removeEventListener('click', onPrevClick));
+      paginationItems.forEach((item) => item.removeEventListener('click', onPaginationClick));
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      slideshow.removeEventListener('touchstart', onTouchStart);
+      slideshow.removeEventListener('touchend', onTouchEnd);
+      slideshow.removeEventListener('mouseenter', stopAutoplay);
+      slideshow.removeEventListener('mouseleave', startAutoplay);
+    };
+  }
+
+  // Initialize on page load and View Transitions
+  initHeroSlideshow();
+  document.addEventListener('astro:after-swap', initHeroSlideshow);
+  document.addEventListener('astro:before-swap', () => {
+    if (cleanupHeroSlideshow) {
+      cleanupHeroSlideshow();
+      cleanupHeroSlideshow = null;
+    }
+  });
+</script>
